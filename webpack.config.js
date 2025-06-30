@@ -1,21 +1,36 @@
 var path = require('path');
 
 module.exports = {
+  mode: 'development',
   entry: './src/client/index.js',
 
   output: {
     path: path.join(__dirname, 'build'),
-    filename: 'bundle.js'
+    filename: 'bundle.js',
+    publicPath: '/'
   },
 
   module: {
-    loaders: [{
+    rules: [{
       test: /\.js$/,
       exclude: /node_modules/,
-      loader: 'babel',
-      query:{
-        presets: ["es2015", "react", "stage-0"]
+      use: {
+        loader: 'babel-loader',
+        options: {
+          presets: ["@babel/preset-env", "@babel/preset-react"]
+        }
       }
     }]
+  },
+
+  devServer: {
+    static: {
+      directory: __dirname
+    },
+    compress: true,
+    port: 8080,
+    hot: true,
+    historyApiFallback: true,
+    open: false
   }
 };
