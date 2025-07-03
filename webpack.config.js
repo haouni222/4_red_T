@@ -3,6 +3,7 @@ var path = require('path');
 module.exports = {
   mode: 'development',
   entry: './src/client/index.js',
+  devtool: 'source-map', // Use source-map instead of eval
 
   output: {
     path: path.join(__dirname, 'build'),

@@ -3,7 +3,8 @@ import { createRoot } from 'react-dom/client'
 import { createLogger } from 'redux-logger'
 import thunk from 'redux-thunk'
 import { createStore, applyMiddleware } from 'redux'
-import { Provider } from 'react-redux'                                                                                                                                                    
+import { Provider } from 'react-redux'
+import { BrowserRouter } from 'react-router-dom'
 import {storeStateMiddleWare} from './middleware/storeStateMiddleWare'
 import reducer from './reducers'
 import App from './containers/app'
@@ -22,7 +23,9 @@ const root = createRoot(container)
 
 root.render(
   <Provider store={store}>
-    <App/>
+    <BrowserRouter>
+      <App/>
+    </BrowserRouter>
   </Provider>
 )
 

@@ -16,10 +16,12 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-redux": "^8.1.0",
+    "react-router-dom": "^7.6.3",
     "redux": "^4.2.1",
     "redux-logger": "^3.0.6",
     "redux-thunk": "^2.4.2",
-    "socket.io": "^4.7.0"
+    "socket.io": "^4.7.0",
+    "socket.io-client": "^4.8.1"
   },
   "devDependencies": {
     "@babel/cli": "^7.23.0",
@@ -36,10 +38,10 @@
     "mocha": "^10.2.0",
     "nyc": "^15.1.0",
     "webpack": "^5.88.0",
+    "webpack-cli": "^5.1.0",
     "webpack-dev-middleware": "^6.1.0",
     "webpack-dev-server": "^4.15.0",
-    "webpack-hot-middleware": "^2.25.0",
-    "webpack-cli": "^5.1.0"
+    "webpack-hot-middleware": "^2.25.0"
   },
   "nyc": {
     "exclude": [
@@ -48,11 +50,16 @@
   },
   "babel": {
     "presets": [
-      ["@babel/preset-env", {
-        "targets": {
-          "browsers": ["last 2 versions"]
+      [
+        "@babel/preset-env",
+        {
+          "targets": {
+            "browsers": [
+              "last 2 versions"
+            ]
+          }
         }
-      }],
+      ],
       "@babel/preset-react"
     ]
   }
