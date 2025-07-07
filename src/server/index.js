@@ -55,10 +55,10 @@ const initEngine = io => {
   io.on('connection', function(socket){
     loginfo("Socket connected: " + socket.id)
     socket.on('action', (action) => {
-      if(action.type === 'server/ping'){
+    if(action.type === 'server/ping'){
         socket.emit('action', {type: 'pong'})
-      }
-      else if(action.type === 'JOIN_GAME')
+    }
+    else if(action.type === 'JOIN_GAME')
     {
         console.log("CA MARCHE ??? ")
         const {roomName, playerName} = action
@@ -113,6 +113,126 @@ const initEngine = io => {
         console.log('STP MARCHE');
         return;
     }
+    else if (action.type === 'LEAVE_GAME')
+    {
+        const room = gameRooms.get(action.roomName);
+        if (!room) 
+        {
+            socket.emit('action', {type: 'LEAVE_ERROR', message: 'Room not found'});
+            console.log("TEST 3-0-1")
+            return;
+        }
+        const player = playerSockets.get(socket.id);
+        if (!player) 
+        {
+            socket.emit('action', {type: 'LEAVE_ERROR', message: 'Player not found'});
+            console.log("TEST 3-0-2")
+            return;
+        }
+        const ret = room.removeplayer(player);
+        if (ret === 0)
+        {
+            socket.emit('action', {type: 'LEAVE_ERROR', message: '????'});
+            console.log("TEST 3-0-3")
+            return;
+        }
+        else if (ret === -1) 
+        {
+            //dev fct stop async loop style stopLoop(action.roomName);
+            gameRooms.delete(action.roomName);
+            loginfo(`Room ${action.roomName} VIDE et supprimee`);
+            console.log("TEST 3-1");
+        }
+        socket.emit('action', {type: 'LEAVE_GOOD', message: 'Il est parti !'});
+        if (ret === 1) 
+        {
+            socket.to(action.roomName).emit('action', {
+                type: 'HOST_CHANGED',
+                new_host: room.host,
+                new_host_socket_id: room.host_socket_id,
+                new_player_count : room.player_count,
+            });
+            loginfo(`l\'hote est maintenant ${room.host} in room ${action.roomName}`);
+            console.log("Test 3-2");
+        }
+        else if (ret === 2) 
+        {
+                socket.to(action.roomName).emit('action', {
+                    type: 'PLAYER_LEFT',
+                    player_name: player.name,
+                    player_id: player.id,
+                    new_player_count : room.player_count,
+                });
+                loginfo(`${player.name} est parti de la room`);
+                console.log("Test 3-3");
+        }
+        playerSockets.delete(socket.id);
+        socket.leave(action.roomName);
+        return;
+    }
+    else if (action.type === 'START_GAME') 
+    {
+        const room = gameRooms.get(action.roomName);
+        if (!room) {
+            socket.emit('action', {type: 'START_ERROR', message: '?????'});
+            console.log("TEST 4-0-1");
+            return;
+        }
+        
+        const player = playerSockets.get(socket.id);
+        if (!player || player.name !== room.host) 
+        {
+            socket.emit('action', {type: 'START_ERROR', message: 'Seul l\'host peut lancer'});
+            console.log("TEST 4-1");
+            return;
+        }
+        
+        if (room.game_state !== 'en attente') 
+        {
+            socket.emit('action', {type: 'START_ERROR', message: 'Deja en cours !'});
+            console.log("TEST 4-2-1");
+            return;
+        }
+        if (room.player_count < 1) 
+        {
+            socket.emit('action', {type: 'START_ERROR', message: '????'});
+            console.log("TEST 4-2-2");
+            return;
+        }
+        room.game_state = 'en cours';
+        //room.initGame();
+        
+        io.to(action.roomName).emit('action', {
+            type: 'START_GOOD',
+            gameState: room.getGameState(),
+            message: 'Game started!'
+        });
+        
+        // Dev fct loop async style startloop(action.roomName, io) ??? 
+        
+        loginfo(`La partie a demarre room : ${action.roomName}`);
+        return;
+    }
+    /*
+    else if (action.type === 'GAME_ACTION')
+    {
+
+        const room = gameRooms.get(action.roomName);
+        if (!room || room.game_state !== 'en cours') 
+        {
+            socket.emit('action', {type: 'GAME_ERROR', message: '????'});
+            console.log("TEST 5-1-1")
+            return;
+        }
+        
+        const player = playerSockets.get(socket.id);
+        if (!player) 
+        {
+            socket.emit('action', {type: 'GAME_ERROR', message: '"?????"'});
+            console.log("TEST 5-1-2")
+            return;
+        }
+    */
     })
   })
 }
@@ -131,6 +251,19 @@ export function create(params){
       })
       
       const stop = (cb) => {
+        /*
+        COMPRENDRE COMMENT LE CLEAR EST FAIR DANS LA PROPOSITION D'IA.
+        // Clean up all game loops
+        for (const [roomName, intervalId] of gameLoops) {
+          clearInterval(intervalId);
+          loginfo(`Game loop stopped for room ${roomName}`);
+        }
+        gameLoops.clear();
+        
+        // Clear game data
+        gameRooms.clear();
+        playerSockets.clear();
+        */
         io.close()
         app.close( () => {
           app.unref()

@@ -17,18 +17,33 @@ const GameRoom = () => {
         const handleServerMessage = (action) => {
         console.log('Serveur dit :', action);
         
-        if (action.type === 'JOINED_GOOD' && action.is_host === true) {
+        if (action.type === 'JOINED_GOOD' && action.is_host === true) 
+        {
             console.log('Bienvenue, tu es l\'host de cette room', action.roomName);
             setGameState('joined')
         }
-        else if (action.type === 'JOINED_GOOD' && action.is_host === false) {
+        else if (action.type === 'JOINED_GOOD' && action.is_host === false) 
+        {
             console.log('Bienvenue dans la room', action.roomName);
             setGameState('joined')
-        } else if (action.type === 'JOIN_ERROR') {
+        } 
+        else if (action.type === 'JOIN_ERROR') 
+        {
             console.log(action.message);
             setErrorMessage(action.message)
             setGameState('error')
         }
+        /*else if (action.type === 'LEAVE_GOOD') 
+        {
+            ///
+        }
+        */
+        // else if (action.type === 'LEAVE_ERROR')
+        // else if (action.type === 'HOST_CHANGED')
+        // else if (action.type === 'START_ERROR)
+        // else if (action.type === 'START_GOOD')
+        // else if (action.type === 'GAME_ERROR)
+
         else if (action.type === 'TEST') {
             console.log('🎉 TEST MESSAGE:', action.message)
         }
@@ -46,6 +61,12 @@ const GameRoom = () => {
         
         // Tuer la connexion a tester quand quit dev
         return () => {
+        socket.emit('action', {
+            type: 'LEAVE_GAME',
+            roomName: roomName,
+            playerName: playerName
+        });
+        console.log('TEST DECONNEXION du room', roomName, 'pour le joueur', playerName);
         socket.off('action', handleServerMessage);
         };
     } else {

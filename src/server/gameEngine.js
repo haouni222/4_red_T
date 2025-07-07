@@ -27,9 +27,17 @@ class GameRoom {
             this.players = this.players.filter(p => p.id !== player.id);
             this.player_count--;
             this.ids = this.ids.filter(id => id !== player.id);
-            return true;
+            if (this.player_count === 0)
+                return -1;
+            if (this.player_count > 0 && this.host_socket_id === player.id) 
+            {
+                this.host = this.players[0].name;
+                this.host_socket_id = this.players[0].id;
+                return 1; 
+            }
+            return 2;
         }
-        return false;
+        return 0;
     }
 }
 
