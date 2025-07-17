@@ -14,7 +14,7 @@ export const useSocket = () => {
   const dispatch = useDispatch()
 
   useEffect(() => {
-    const newSocket = io('http://localhost:8080')
+    const newSocket = io('http://localhost:3004')
     setSocket(newSocket)
 
     const handleServerAction = (action) => {

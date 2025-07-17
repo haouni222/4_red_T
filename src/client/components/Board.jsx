@@ -1,18 +1,10 @@
 import React from 'react'
+import { getBoardWithPiece, getDropPosition } from '../utils/gameLogic'
 
-const Board = ({ board, currentPiece }) => {
-  // Fonction pure pour combiner le plateau et la pièce courante
+const Board = ({ board, currentPiece, showGhost = true }) => {
   const renderBoard = () => {
-    // Clone du plateau pour ne pas modifier l'original
-    const displayBoard = board.map(row => [...row])
-    
-    // Ajouter la pièce courante si elle existe
-    if (currentPiece) {
-      // Logique pour placer la pièce courante sur le plateau d'affichage
-      // À implémenter avec les fonctions pures de gameLogic
-    }
-    
-    return displayBoard
+    const ghostPiece = showGhost && currentPiece ? getDropPosition(board, currentPiece) : null
+    return getBoardWithPiece(board, currentPiece, ghostPiece)
   }
 
   const displayBoard = renderBoard()
@@ -20,14 +12,26 @@ const Board = ({ board, currentPiece }) => {
   return (
     <div className="tetris-board">
       {displayBoard.map((row, y) =>
-        row.map((cell, x) => (
-          <div
-            key={`${x}-${y}`}
-            className={`cell ${cell ? `piece-${cell}` : 'empty'}`}
-            data-x={x}
-            data-y={y}
-          />
-        ))
+        row.map((cell, x) => {
+          let cellClass = 'cell'
+          
+          if (cell === 'ghost') {
+            cellClass += ' ghost'
+          } else if (cell && cell !== 0) {
+            cellClass += ` piece-${cell}`
+          } else {
+            cellClass += ' empty'
+          }
+          
+          return (
+            <div
+              key={`${x}-${y}`}
+              className={cellClass}
+              data-x={x}
+              data-y={y}
+            />
+          )
+        })
       )}
     </div>
   )

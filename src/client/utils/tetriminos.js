@@ -1,5 +1,3 @@
-// 🎮 Définitions des pièces Tetris selon le sujet
-
 export const TETRIMINOS = {
   I: {
     type: 'I',
@@ -87,24 +85,29 @@ export const createPiece = (type, x = 4, y = 0) => {
   }
 }
 
-export const generatePieceSequence = (count = 7) => {
+export const generatePieceSequence = () => {
   const sequence = [...PIECE_TYPES]
   for (let i = sequence.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
     [sequence[i], sequence[j]] = [sequence[j], sequence[i]]
   }
-  return sequence.slice(0, count)
+  
+  return sequence
 }
 
-export const getNextPiece = (currentSequence, index) => {
-  if (index >= currentSequence.length) {
+export const getNextPiece = (sequence, index) => {
+  if (index >= sequence.length) {
     const newSequence = generatePieceSequence()
-    return { piece: newSequence[0], newSequence, newIndex: 1 }
+    return { 
+      piece: createPiece(newSequence[0]), 
+      newSequence, 
+      newIndex: 1 
+    }
   }
   
   return { 
-    piece: currentSequence[index], 
-    newSequence: currentSequence, 
+    piece: createPiece(sequence[index]), 
+    newSequence: sequence, 
     newIndex: index + 1 
   }
 }

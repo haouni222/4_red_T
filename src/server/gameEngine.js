@@ -39,6 +39,18 @@ class GameRoom {
         }
         return 0;
     }
+
+    getGameState() {
+        return {
+            roomName: this.name,
+            players: this.players,
+            gameState: this.game_state,
+            playerCount: this.player_count,
+            host: this.host,
+            pieces: this.pieces,
+            isRunning: this.is_running
+        }
+    }
 }
 
 class Player {

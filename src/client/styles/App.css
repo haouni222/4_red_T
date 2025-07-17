@@ -1,9 +1,11 @@
+/* === APP PRINCIPAL === */
 .App {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
 }
 
+/* === HEADER === */
 .app-header {
   background: rgba(0, 0, 0, 0.3);
   backdrop-filter: blur(10px);
@@ -46,11 +48,13 @@
   border: 1px solid #f44336;
 }
 
+/* === MAIN CONTENT === */
 .app-main {
   flex: 1;
   padding: 2rem;
 }
 
+/* === HOME PAGE === */
 .home {
   display: flex;
   justify-content: center;
@@ -143,6 +147,7 @@
   color: #ffd700;
 }
 
+/* === GAME ROOM === */
 .game-room {
   max-width: 1200px;
   margin: 0 auto;
@@ -173,6 +178,7 @@
   border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
+/* === LOBBY === */
 .lobby {
   text-align: center;
 }
@@ -199,6 +205,7 @@
   background: linear-gradient(45deg, #ee5a24, #FF6B6B);
 }
 
+/* === PLAYER LIST === */
 .player-list {
   margin: 2rem 0;
 }
@@ -212,6 +219,7 @@
   display: flex;
   flex-wrap: wrap;
   gap: 1rem;
+  justify-content: center;
 }
 
 .player {
@@ -242,6 +250,7 @@
   font-style: italic;
 }
 
+/* === GAME AREA === */
 .game-area {
   display: grid;
   grid-template-columns: 1fr 300px;
@@ -283,6 +292,7 @@
   margin-bottom: 10px;
 }
 
+/* === PLATEAU TETRIS (CSS GRID selon le sujet) === */
 .tetris-board {
   display: grid;
   grid-template-columns: repeat(10, 1fr);
@@ -306,6 +316,12 @@
   background: #111;
 }
 
+.cell.ghost {
+  background: rgba(255, 255, 255, 0.3) !important;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+}
+
+/* Couleurs des pièces selon le sujet */
 .cell.piece-I { background: #00f0f0; }
 .cell.piece-O { background: #f0f000; }
 .cell.piece-T { background: #a000f0; }
@@ -314,6 +330,155 @@
 .cell.piece-J { background: #0000f0; }
 .cell.piece-L { background: #f0a000; }
 
+/* === NEXT PIECE DISPLAY === */
+.next-piece-display {
+  margin-bottom: 1rem;
+}
+
+.next-piece-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(4, 1fr);
+  gap: 1px;
+  width: 80px;
+  height: 80px;
+  background: #000;
+  border: 2px solid #333;
+  border-radius: 4px;
+  padding: 2px;
+  margin: 0 auto;
+}
+
+.next-piece-grid.empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #666;
+  font-size: 0.8rem;
+}
+
+.next-cell {
+  background: #111;
+  border: 1px solid #222;
+}
+
+.next-cell.empty {
+  background: #111;
+}
+
+/* Couleurs pour next piece */
+.next-cell.piece-I { background: #00f0f0; }
+.next-cell.piece-O { background: #f0f000; }
+.next-cell.piece-T { background: #a000f0; }
+.next-cell.piece-S { background: #00f000; }
+.next-cell.piece-Z { background: #f00000; }
+.next-cell.piece-J { background: #0000f0; }
+.next-cell.piece-L { background: #f0a000; }
+
+/* === GAME INFO === */
+.score-info {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+}
+
+.score-info h3 {
+  margin-bottom: 0.5rem;
+  color: #ffffff;
+}
+
+.game-over {
+  background: rgba(244, 67, 54, 0.2);
+  border: 2px solid #f44336;
+  border-radius: 10px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.game-over h3 {
+  color: #f44336;
+  margin-bottom: 1rem;
+}
+
+.game-over button {
+  background: linear-gradient(45deg, #4CAF50, #45a049);
+  color: white;
+  padding: 10px 20px;
+}
+
+/* === CONTROLS INFO === */
+.controls-info, .controls-help {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  padding: 1rem;
+  margin-top: 1rem;
+  text-align: center;
+}
+
+.controls-info h3, .controls-help h4 {
+  margin-bottom: 0.5rem;
+  color: #ffffff;
+}
+
+.controls-help {
+  font-size: 0.9rem;
+}
+
+.controls-help p {
+  margin: 0.2rem 0;
+  color: #e0e0e0;
+}
+
+/* === ROOM HEADER ENHANCED === */
+.room-info {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  color: #e0e0e0;
+  font-size: 0.9rem;
+}
+
+.playing-indicator {
+  background: rgba(76, 175, 80, 0.2);
+  border: 1px solid #4CAF50;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 0.8rem;
+}
+
+/* === OPPONENTS AREA === */
+.opponents {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  padding: 1rem;
+}
+
+.opponent-spectrum {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  padding: 10px;
+  margin-bottom: 10px;
+}
+
+.spectrum-placeholder {
+  text-align: center;
+  color: #888;
+  font-size: 0.9rem;
+  padding: 10px;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 4px;
+}
+
+.no-opponents {
+  color: #888;
+  font-style: italic;
+  text-align: center;
+  padding: 1rem;
+}
+
+/* === ERROR STATE === */
 .error-state {
   text-align: center;
   padding: 2rem;
@@ -330,6 +495,18 @@
   margin-top: 1rem;
 }
 
+/* === GAME STATUS === */
+.game-status {
+  text-align: center;
+  padding: 2rem;
+}
+
+.game-status h2 {
+  margin-bottom: 1rem;
+  color: #ffffff;
+}
+
+/* === RESPONSIVE === */
 @media (max-width: 768px) {
   .app-header {
     padding: 1rem;

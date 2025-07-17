@@ -36,6 +36,12 @@ const gameSlice = createSlice({
       state.score = action.payload
     },
     
+    updateLinesCleared: (state, action) => {
+      state.linesCleared += action.payload
+      // Augmenter le niveau tous les 10 lignes
+      state.level = Math.floor(state.linesCleared / 10) + 1
+    },
+    
     setPlaying: (state, action) => {
       state.isPlaying = action.payload
     },
@@ -60,6 +66,7 @@ export const {
   setCurrentPiece,
   setNextPiece,
   updateScore,
+  updateLinesCleared,
   setPlaying,
   setGameOver,
   updateOpponents,

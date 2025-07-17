@@ -1,8 +1,8 @@
 import React from 'react'
 import { Routes, Route } from 'react-router-dom'
-import { useSocket } from './hooks/useSocket.js'
-import Home from './components/Home.jsx'
-import GameRoom from './components/GameRoom.jsx'
+import { useSocket } from './hooks/useSocket'
+import Home from './components/Home'
+import GameRoom from './components/GameRoom'
 import './styles/App.css'
 
 function App() {
@@ -14,9 +14,9 @@ function App() {
         <h1>🔴 Red Tetris</h1>
         <div className="connection-status">
           {socket?.connected ? (
-            <span className="status connected"> Connected 🟢</span>
+            <span className="status connected">🟢 Connected</span>
           ) : (
-            <span className="status disconnected"> Disconnected 🔴 </span>
+            <span className="status disconnected">🔴 Disconnected</span>
           )}
         </div>
       </header>
