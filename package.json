@@ -14,14 +14,14 @@
   },
   "dependencies": {
     "@reduxjs/toolkit": "^2.8.2",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
     "react-redux": "^8.1.3",
     "react-router-dom": "^7.7.0",
     "redux": "^4.2.1",
     "redux-logger": "^3.0.6",
     "redux-thunk": "^2.4.2",
-    "socket.io": "^4.7.0",
+    "socket.io": "^4.8.1",
     "socket.io-client": "^4.8.1"
   },
   "devDependencies": {
@@ -65,5 +65,11 @@
       ],
       "@babel/preset-react"
     ]
-  }
+  },
+  "description": "This starter kit was made to help students to develop red_tetris project : a Full Stack Javascript Tetris. We can also use it as a starting point for any product made of React / Redux and socket.io.",
+  "main": "params.js",
+  "directories": {
+    "test": "test"
+  },
+  "keywords": []
 }

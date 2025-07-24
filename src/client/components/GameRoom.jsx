@@ -9,6 +9,7 @@ import { resetGame } from '../store/gameSlice'
 import Board from './Board'
 import NextPiece from './NextPiece'
 import PlayerList from './PlayerList'
+import OpponentSpectrum from './OpponentSpectrum'
 
 const GameRoom = () => {
   const { room, player } = useParams()
@@ -33,9 +34,13 @@ const GameRoom = () => {
 
   useEffect(() => {
     if (room && player && socket) {
-      console.log('🎮 Joining room:', room, 'as:', player)    
+      console.log('🎮 Joining room:', room, 'as:', player)
+      console.log('🔍 CLIENT DEBUG: Socket connected:', socket.connected)
+      console.log('🔍 CLIENT DEBUG: Socket ID:', socket.id)
+      
       dispatch(setConnecting())
       const joinAction = createJoinAction(room, player)
+      console.log('🔍 CLIENT DEBUG: Sending join action:', joinAction)
       socket.emit('action', joinAction)
     }
 
@@ -47,15 +52,15 @@ const GameRoom = () => {
         dispatch(resetGame())
       }
     }
-  }, [room, player, socket])
+  }, [room, player, socket, dispatch, roomState.currentRoom])
 
-  // 🚀 Initialiser le jeu quand la partie démarre
+  // 🚀 Initialiser le jeu quand la partie démarre (mais PAS après game over)
   useEffect(() => {
-    if (roomState.gameState === 'en cours' && !gameState.isPlaying) {
+    if (roomState.gameState === 'en cours' && !gameState.isPlaying && !gameState.gameOver) {
       console.log('🎮 Game starting! Initializing...')
       gameLogic.initGame()
     }
-  }, [roomState.gameState, gameState.isPlaying, gameLogic])
+  }, [roomState.gameState, gameState.isPlaying, gameState.gameOver, gameLogic])
 
   const handleLeaveRoom = () => {
     if (socket) {
@@ -69,6 +74,9 @@ const GameRoom = () => {
 
   const handleStartGame = () => {
     if (socket) {
+      // Reset le state local avant de démarrer
+      dispatch(resetGame())
+      
       const startAction = createStartAction(room)
       socket.emit('action', startAction)
     }
@@ -105,8 +113,10 @@ const GameRoom = () => {
             )}
             
             <div className="controls-info">
-              <h3>🎮 Controls</h3>
+              <h3>🎮 Controls & Rules</h3>
               <p>← → Move | ↑ Rotate | ↓ Soft Drop | Space Hard Drop</p>
+              <p>💥 Clear lines to send penalty lines to opponents!</p>
+              <p>🏆 Last player standing wins!</p>
             </div>
           </div>
         )
@@ -133,10 +143,31 @@ const GameRoom = () => {
                   <p>Lines: {gameState.linesCleared}</p>
                 </div>
                 
+                {/* 💀 Message pour les perdants */}
                 {gameState.gameOver && (
                   <div className="game-over">
                     <h3>💀 Game Over!</h3>
-                    <button onClick={gameLogic.initGame}>🔄 Restart</button>
+                    <p>You're eliminated from this round.</p>
+                    <p>Wait for the next game to restart.</p>
+                  </div>
+                )}
+                
+                {/* 🎉 Message pour le gagnant */}
+                {!gameState.isPlaying && !gameState.gameOver && (
+                  <div className="game-winner">
+                    <h3>🎉 You Won!</h3>
+                    <p>Congratulations! You are the last player standing!</p>
+                    {roomState.isHost && (
+                      <button 
+                        onClick={handleStartGame}
+                        className="restart-button-small"
+                      >
+                        🔄 Start New Game
+                      </button>
+                    )}
+                    {!roomState.isHost && (
+                      <p>⏳ Waiting for host to start a new game...</p>
+                    )}
                   </div>
                 )}
                 
@@ -151,23 +182,26 @@ const GameRoom = () => {
             </div>
             
             <div className="opponents">
-              <h3>Opponents:</h3>
-              {roomState.players
-                .filter(p => p.name !== roomState.playerName)
-                .map(opponent => (
-                <div key={opponent.id} className="opponent-spectrum">
-                  <p>{opponent.name}</p>
-                  <div className="spectrum">
-                    <div className="spectrum-placeholder">
-                      📊 Spectrum
-                    </div>
-                  </div>
-                </div>
-              ))}
+              <h3>👥 Opponents ({gameState.opponents.length})</h3>
               
-              {roomState.players.length === 1 && (
-                <p className="no-opponents">No opponents yet</p>
+              <div className="opponents-grid">
+                {gameState.opponents.map(opponent => (
+                  <OpponentSpectrum
+                    key={opponent.name}
+                    playerName={opponent.name}
+                    spectrum={opponent.spectrum}
+                  />
+                ))}
+              </div>
+              
+              {gameState.opponents.length === 0 && (
+                <p className="no-opponents">🎮 Solo mode - No other players</p>
               )}
+              
+              <div className="multiplayer-info">
+                <p>💡 Spectrum shows opponents' board heights</p>
+                <p>💥 Clear multiple lines to send penalty lines!</p>
+              </div>
             </div>
           </div>
         )
@@ -201,6 +235,12 @@ const GameRoom = () => {
           <span>Player: {player}</span>
           {gameState.isPlaying && (
             <span className="playing-indicator">🎮 Playing</span>
+          )}
+          {gameState.gameOver && (
+            <span className="game-over-indicator">💀 Eliminated</span>
+          )}
+          {!gameState.isPlaying && !gameState.gameOver && roomState.gameState === 'en cours' && (
+            <span className="winner-indicator">🏆 Winner</span>
           )}
         </div>
       </header>

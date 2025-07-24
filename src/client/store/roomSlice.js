@@ -5,8 +5,9 @@ const initialState = {
   playerName: null,
   isHost: false,
   players: [],
-  gameState: 'disconnected', // penser a le changer en fnction de l'etat
-  error: null
+  gameState: 'disconnected', // disconnected, connecting, en attente, en cours, finished, error
+  error: null,
+  gameResult: null // Résultat de la partie (winner, etc.)
 }
 
 const roomSlice = createSlice({
@@ -16,6 +17,7 @@ const roomSlice = createSlice({
     setConnecting: (state) => {
       state.gameState = 'connecting'
       state.error = null
+      state.gameResult = null
     },
     
     joinSuccess: (state, action) => {
@@ -25,6 +27,7 @@ const roomSlice = createSlice({
       state.players = action.payload.players || []
       state.gameState = 'en attente'
       state.error = null
+      state.gameResult = null
     },
     
     joinError: (state, action) => {
@@ -42,6 +45,21 @@ const roomSlice = createSlice({
     
     gameStarted: (state) => {
       state.gameState = 'en cours'
+      state.gameResult = null
+    },
+    
+    gameFinished: (state, action) => {
+      state.gameState = 'finished'
+      state.gameResult = {
+        winner: action.payload.winner,
+        finalPlayers: action.payload.finalPlayers
+      }
+    },
+    
+    resetToLobby: (state) => {
+      state.gameState = 'en attente'
+      state.gameResult = null
+      // Garder les players et room info
     },
     
     resetRoom: () => initialState
@@ -55,6 +73,8 @@ export const {
   updatePlayers,
   hostChanged,
   gameStarted,
+  gameFinished,
+  resetToLobby,
   resetRoom
 } = roomSlice.actions
 

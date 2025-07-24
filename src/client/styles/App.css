@@ -269,13 +269,13 @@
   gap: 1rem;
 }
 
-.next-piece, .score {
+.next-piece, .score-info {
   background: rgba(255, 255, 255, 0.1);
   border-radius: 10px;
   padding: 1rem;
 }
 
-.next-piece h3, .score h3 {
+.next-piece h3, .score-info h3 {
   margin-bottom: 0.5rem;
   color: #ffffff;
 }
@@ -329,6 +329,24 @@
 .cell.piece-Z { background: #f00000; }
 .cell.piece-J { background: #0000f0; }
 .cell.piece-L { background: #f0a000; }
+
+/* 💥 PENALTY LINES */
+.cell.piece-penalty {
+  background: #666 !important;
+  border: 2px solid #999 !important;
+  position: relative;
+}
+
+.cell.piece-penalty::after {
+  content: '⚡';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: #ff0;
+  font-size: 8px;
+  font-weight: bold;
+}
 
 /* === NEXT PIECE DISPLAY === */
 .next-piece-display {
@@ -408,6 +426,40 @@
   padding: 10px 20px;
 }
 
+/* === 🎉 GAME WINNER === */
+.game-winner {
+  background: rgba(76, 175, 80, 0.2);
+  border: 2px solid #4CAF50;
+  border-radius: 10px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.game-winner h3 {
+  color: #4CAF50;
+  margin-bottom: 1rem;
+  font-size: 1.3rem;
+}
+
+.game-winner p {
+  margin: 0.5rem 0;
+  color: #e0e0e0;
+}
+
+.restart-button-small {
+  background: linear-gradient(45deg, #4CAF50, #45a049);
+  color: white;
+  padding: 8px 16px;
+  font-size: 0.9rem;
+  border-radius: 6px;
+  margin-top: 1rem;
+}
+
+.restart-button-small:hover {
+  background: linear-gradient(45deg, #45a049, #4CAF50);
+}
+
 /* === CONTROLS INFO === */
 .controls-info, .controls-help {
   background: rgba(255, 255, 255, 0.1);
@@ -455,13 +507,6 @@
   padding: 1rem;
 }
 
-.opponent-spectrum {
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 8px;
-  padding: 10px;
-  margin-bottom: 10px;
-}
-
 .spectrum-placeholder {
   text-align: center;
   color: #888;
@@ -476,6 +521,162 @@
   font-style: italic;
   text-align: center;
   padding: 1rem;
+}
+
+/* === 👥 OPPONENT SPECTRUMS === */
+.opponents-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.opponent-spectrum {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  padding: 10px;
+  text-align: center;
+}
+
+.opponent-name {
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: #ffffff;
+  font-size: 0.9rem;
+}
+
+.spectrum-container {
+  margin-bottom: 8px;
+}
+
+.spectrum-grid {
+  display: grid;
+  grid-template-columns: repeat(10, 1fr);
+  gap: 1px;
+  width: 100px;
+  height: 80px;
+  background: #000;
+  border: 1px solid #333;
+  border-radius: 4px;
+  margin: 0 auto;
+  overflow: hidden;
+}
+
+.spectrum-column {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+
+.spectrum-block {
+  flex: 1;
+  min-height: 1px;
+}
+
+.spectrum-block.filled {
+  background: #4CAF50;
+  border-right: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.spectrum-block.empty {
+  background: transparent;
+}
+
+.spectrum-stats {
+  font-size: 0.75rem;
+  color: #ccc;
+  display: flex;
+  justify-content: space-between;
+}
+
+.multiplayer-info {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+  font-size: 0.8rem;
+  color: #b0b0b0;
+}
+
+.multiplayer-info p {
+  margin: 0.2rem 0;
+}
+
+/* === 🎮 GAME INDICATORS === */
+.game-over-indicator {
+  background: rgba(244, 67, 54, 0.2);
+  border: 1px solid #f44336;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  color: #f44336;
+}
+
+.winner-indicator {
+  background: rgba(76, 175, 80, 0.2);
+  border: 1px solid #4CAF50;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  color: #4CAF50;
+}
+
+.controls-info h3 {
+  margin-bottom: 0.5rem;
+}
+
+.controls-info p {
+  margin: 0.3rem 0;
+  color: #e0e0e0;
+}
+
+/* === 📱 RESPONSIVE IMPROVEMENTS === */
+@media (max-width: 1024px) {
+  .game-area {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  
+  .opponents {
+    order: -1;
+  }
+  
+  .opponents-grid {
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+    gap: 0.5rem;
+  }
+  
+  .spectrum-grid {
+    width: 80px;
+    height: 60px;
+  }
+}
+
+@media (max-width: 768px) {
+  .main-game {
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+  }
+  
+  .tetris-board {
+    width: 250px;
+    height: 500px;
+  }
+  
+  .opponents-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .spectrum-grid {
+    width: 60px;
+    height: 48px;
+  }
+  
+  .room-info {
+    flex-direction: column;
+    gap: 0.5rem;
+    text-align: center;
+  }
 }
 
 /* === ERROR STATE === */
@@ -493,6 +694,154 @@
   background: linear-gradient(45deg, #4CAF50, #45a049);
   color: white;
   margin-top: 1rem;
+}
+
+/* === 🏆 GAME FINISHED STATE === */
+.game-finished {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 60vh;
+}
+
+.game-result {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border-radius: 20px;
+  padding: 3rem;
+  text-align: center;
+  max-width: 600px;
+  width: 100%;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.game-result h2 {
+  font-size: 2rem;
+  margin-bottom: 2rem;
+  color: #ffffff;
+}
+
+.winner-announcement {
+  margin-bottom: 2rem;
+  padding: 1rem;
+  background: rgba(76, 175, 80, 0.2);
+  border: 2px solid #4CAF50;
+  border-radius: 15px;
+}
+
+.winner-announcement h3 {
+  font-size: 1.5rem;
+  color: #4CAF50;
+  margin-bottom: 0.5rem;
+}
+
+.no-winner {
+  margin-bottom: 2rem;
+  padding: 1rem;
+  background: rgba(255, 193, 7, 0.2);
+  border: 2px solid #ffc107;
+  border-radius: 15px;
+}
+
+.no-winner h3 {
+  font-size: 1.5rem;
+  color: #ffc107;
+  margin-bottom: 0.5rem;
+}
+
+.final-standings {
+  margin-bottom: 2rem;
+}
+
+.final-standings h4 {
+  color: #ffffff;
+  margin-bottom: 1rem;
+  font-size: 1.2rem;
+}
+
+.standings-list {
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 10px;
+  padding: 1rem;
+}
+
+.standing-item {
+  display: grid;
+  grid-template-columns: 40px 1fr 120px 100px;
+  gap: 1rem;
+  align-items: center;
+  padding: 0.5rem;
+  margin-bottom: 0.5rem;
+  border-radius: 8px;
+  font-size: 0.9rem;
+}
+
+.standing-item.winner {
+  background: rgba(76, 175, 80, 0.2);
+  border: 1px solid #4CAF50;
+}
+
+.standing-item.eliminated {
+  background: rgba(244, 67, 54, 0.2);
+  border: 1px solid #f44336;
+  opacity: 0.8;
+}
+
+.standing-item .rank {
+  font-weight: bold;
+  color: #ffd700;
+}
+
+.standing-item .name {
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.standing-item .status {
+  font-size: 0.8rem;
+  color: #e0e0e0;
+}
+
+.standing-item .score {
+  text-align: right;
+  color: #ffffff;
+}
+
+.post-game-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.restart-button {
+  background: linear-gradient(45deg, #4CAF50, #45a049);
+  color: white;
+  padding: 15px 30px;
+  font-size: 1.1rem;
+  border-radius: 10px;
+}
+
+.restart-button:hover {
+  background: linear-gradient(45deg, #45a049, #4CAF50);
+}
+
+.leave-button-secondary {
+  background: linear-gradient(45deg, #757575, #616161);
+  color: white;
+  padding: 10px 20px;
+  font-size: 1rem;
+  border-radius: 8px;
+}
+
+.leave-button-secondary:hover {
+  background: linear-gradient(45deg, #616161, #424242);
+}
+
+.post-game-actions p {
+  color: #e0e0e0;
+  font-style: italic;
+  margin: 0;
 }
 
 /* === GAME STATUS === */
